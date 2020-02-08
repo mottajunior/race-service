@@ -2,7 +2,9 @@ package racerouter
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/gorilla/mux"
+	rabbitMQ "github.com/mottajunior/race-service/Infraestruture"
 	. "github.com/mottajunior/race-service/models"
 	. "github.com/mottajunior/race-service/repository"
 	strategy "github.com/mottajunior/race-service/service"
@@ -48,7 +50,6 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	respondWithJson(w, http.StatusCreated, race)
 }
 
-
 func Delete(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	params := mux.Vars(r)
@@ -73,6 +74,11 @@ func UpdateState(w http.ResponseWriter, r* http.Request){
 		respondWithError(w, http.StatusInternalServerError,"erro ao atulizar status da corrida")
 		return
 	}
+
+	msg := createMessage(strategy)
+	rabbitMQ.PostMessage(msg)
+	fmt.Println("Mensagem postada na fila.")
+
 	respondWithJson(w, http.StatusOK, params["id"])
 }
 
@@ -92,5 +98,25 @@ func respondWithJson(w http.ResponseWriter, code int, payload interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 	w.Write(response)
+}
+
+func createMessage(strategy strategy.SetStatusRaceStrategy) string{
+	//objectType := reflect.TypeOf(strategy)
+	//check type of strategy
+	//request necessary for make message
+	//return message
+	return "message fake"
+
+	//request example.
+	//resp, err := http.Get("http://localhost:4000/api/v1/races")
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//defer resp.Body.Close()
+	//bodyBytes, err := ioutil.ReadAll(resp.Body)
+	//if err != nil{
+	//	log.Fatal(err)
+	//}
+	//fmt.Println("retornou => " + string(bodyBytes))
 }
 

@@ -21,8 +21,7 @@ func init() {
 }
 
 func main() {
-
-	//TODO: chamar o strategy baseado em algum parametro (header?query?param?)
+	//TODO: Verificar quais endpoints necessarios, e acessar endpoints de (obter device token - enviar notificacao)
 	r := mux.NewRouter()
 	r.HandleFunc("/api/v1/races", racerouter.GetAll).Methods("GET")
 	r.HandleFunc("/api/v1/races/{id}", racerouter.GetByID).Methods("GET")
