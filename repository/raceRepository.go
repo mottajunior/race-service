@@ -5,7 +5,8 @@ import (
 
 	. "github.com/mottajunior/race-service/models"
 	mgo "gopkg.in/mgo.v2"
-	"gopkg.in/mgo.v2/bson"
+	"gopkg.in/mgo.v2/bson"	
+	"strconv"
 )
 
 type RaceDAO struct {
@@ -33,11 +34,32 @@ func (m *RaceDAO) GetAll() ([]Race, error) {
 	return races, err
 }
 
+func (m *RaceDAO) GetByClientID(id string) (Race, error) {
+	var clientId, err = strconv.Atoi(id)
+	var race Race	
+	err = db.C(COLLECTION).Find(bson.M{"idcliente": clientId}).One(&race)
+	return race, err
+}
+
+func (m *RaceDAO) GetByDriverID(id string) (Race, error) {
+	var clientId, err = strconv.Atoi(id)
+	var race Race
+	err = db.C(COLLECTION).Find(bson.M{"idmotorista": clientId}).One(&race)
+	return race, err
+}
+
 func (m *RaceDAO) GetByID(id string) (Race, error) {
 	var race Race
 	err := db.C(COLLECTION).FindId(bson.ObjectIdHex(id)).One(&race)
 	return race, err
 }
+
+func (m *RaceDAO) GetByDescricao(descricao string) (Race, error) {
+	var race Race
+	err := db.C(COLLECTION).Find(bson.M{"descricao": descricao}).One(&race)
+	return race, err
+}
+
 
 func (m *RaceDAO) Create(race Race) error {
 	err := db.C(COLLECTION).Insert(&race)

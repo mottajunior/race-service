@@ -25,6 +25,8 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/api/v1/races", racerouter.GetAll).Methods("GET")
 	r.HandleFunc("/api/v1/races/{id}", racerouter.GetByID).Methods("GET")
+	r.HandleFunc("/api/v1/races/client/{id}", racerouter.GetByClientId).Methods("GET")
+	r.HandleFunc("/api/v1/races/driver/{id}", racerouter.GetByDriverId).Methods("GET")
 	r.HandleFunc("/api/v1/races", racerouter.Create).Methods("POST")
 	r.HandleFunc("/api/v1/races/{id}", racerouter.UpdateState).Methods("PUT")
 	r.HandleFunc("/api/v1/races/{id}", racerouter.Delete).Methods("DELETE")	
@@ -34,3 +36,7 @@ func main() {
 	log.Fatal(http.ListenAndServe(port, r))
 
 }
+
+
+
+
